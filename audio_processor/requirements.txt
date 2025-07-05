@@ -5,5 +5,6 @@ ollama
 openai-whisper
 requests # For MS Teams webhook
 python-dotenv # For managing webhook URL
+streamlit # For the web UI
 # For whisper, you might also need ffmpeg installed on the system
 # Microsoft Graph API library (will add later if webhook is not sufficient)

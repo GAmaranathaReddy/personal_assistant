@@ -43,10 +43,11 @@ This Python application records audio, transcribes it, generates a summary and a
     ```bash
     pip install -r requirements.txt
     ```
+    This installs all necessary libraries, including `streamlit` for the web UI, `openai-whisper` for transcription, `ollama` for LLM interactions, etc.
     *Note: `openai-whisper` and its dependencies (like PyTorch) can be large. Ensure you have sufficient disk space and a stable internet connection during installation.*
 
 5.  **Configure Environment Variables:**
-    Create a `.env` file in the `audio_processor` directory (i.e., at the same level as `src/` and `requirements.txt`).
+    Create a `.env` file in the `audio_processor` directory (i.e., at the same level as `app.py`, `src/` and `requirements.txt`).
     Add the following variables as needed:
 
     ```env
@@ -70,23 +71,43 @@ This Python application records audio, transcribes it, generates a summary and a
 
 ## Running the Application
 
+The application now features a Streamlit web interface.
+
 1.  **Ensure your virtual environment is activated.**
-2.  **Make sure Ollama is running with the model you intend to use (e.g., `llama2`).**
-3.  **Run the main script from the `audio_processor` directory:**
+2.  **Make sure Ollama is running with the model you intend to use (e.g., `llama2`, or the one specified in `OLLAMA_MODEL` in your `.env` file).**
+3.  **Navigate to the `audio_processor` directory (if not already there).**
+4.  **Run the Streamlit app:**
+    ```bash
+    streamlit run app.py
+    ```
+5.  **Open your web browser** to the local URL provided by Streamlit (usually `http://localhost:8501`).
+6.  **Use the web interface:**
+    -   Choose to upload an audio file (WAV) or use the basic recording feature in the sidebar.
+    -   Configure Whisper and Ollama models in the sidebar if needed.
+    -   Click "Process Audio".
+    -   View the transcript, summary, and action items.
+    -   Optionally, enter your MS Teams webhook URL (if not in `.env`) and post the action items.
+
+### Legacy CLI (Still Available)
+
+The original command-line interface is still available if preferred:
+
+1.  **Ensure your virtual environment is activated and Ollama is running.**
+2.  **Run the main script from the `audio_processor` directory:**
     ```bash
     python src/main.py
     ```
-4.  **Follow the on-screen prompts:**
-    -   Enter the duration for audio recording (or 0 to use an existing `recorded_audio.wav`).
-    -   If action items are generated and a webhook URL is configured, you'll be asked if you want to post them to MS Teams.
+3.  **Follow the on-screen prompts.**
+
 
 ## Project Structure
 
 ```
 audio_processor/
+├── app.py                    # Main Streamlit application script
 ├── src/
 │   ├── __init__.py
-│   ├── main.py               # Main application script
+│   ├── main.py               # Original CLI application script
 │   ├── audio_recorder.py     # Handles audio recording
 │   ├── transcriber.py        # Handles audio transcription using Whisper
 │   ├── text_processor.py     # Handles summarization and action items via Ollama
@@ -98,7 +119,7 @@ audio_processor/
 └── README.md                 # This file
 ```
 
-## Notes on Whisper Models
+## Notes on Whisper and Ollama Models
 
 -   The application currently defaults to using the "tiny" Whisper model for faster processing (`transcriber.py`).
 -   You can change the model size (e.g., "base", "small", "medium", "large") in `src/transcriber.py` (in the `WhisperTranscriber` constructor or when `main.py` instantiates it) for better accuracy, but this will require more resources and time. The first time you use a new model, Whisper will download it.
